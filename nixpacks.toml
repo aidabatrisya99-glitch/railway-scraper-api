@@ -1,10 +1,13 @@
 providers = ["..."]
 
 [phases.setup]
-nixPkgs = ["...", "chromium"]
+nixPkgs = ["...", "chromium", "chromedriver"]
 
 [phases.install]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "chromedriver --version"
+]
 
 [start]
-cmd = "php -S 0.0.0.0:$PORT index.php"
+cmd = "chromedriver --port=9515 & php -S 0.0.0.0:$PORT index.php"
