@@ -5,10 +5,10 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\ScraperService;
 
-// Load environment variables (if .env exists)
+// Load environment variables (if .env exists, otherwise use getenv)
 if (file_exists(__DIR__ . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
+    $dotenv->safeLoad();
 }
 
 // Set headers
