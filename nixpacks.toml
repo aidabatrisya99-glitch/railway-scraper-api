@@ -1,0 +1,10 @@
+providers = ["..."]
+
+[phases.setup]
+nixPkgs = ["...", "chromium"]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT index.php"
