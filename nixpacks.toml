@@ -10,4 +10,4 @@ cmds = [
 ]
 
 [start]
-cmd = "chromedriver --port=9515 & php -S 0.0.0.0:$PORT index.php"
+cmd = "chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' > /tmp/chromedriver.log 2>&1 & sleep 2 && php -S 0.0.0.0:$PORT index.php"
