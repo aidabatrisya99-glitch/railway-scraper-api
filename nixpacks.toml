@@ -6,8 +6,9 @@ nixPkgs = ["php81", "php81Packages.composer", "chromium", "chromedriver"]
 [phases.install]
 cmds = [
     "composer install --no-dev --optimize-autoloader",
-    "chromedriver --version"
+    "chromedriver --version",
+    "chmod +x start.sh"
 ]
 
 [start]
-cmd = "chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' > /tmp/chromedriver.log 2>&1 & sleep 2 && php -S 0.0.0.0:$PORT index.php"
+cmd = "./start.sh"
