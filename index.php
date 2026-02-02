@@ -14,8 +14,8 @@ if (file_exists(__DIR__ . '/.env')) {
 // Set headers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-API-Key');
 
 // Handle OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -23,18 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Only allow POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
-}
-
 // Get request path
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Route: GET / (health check)
+if (($path === '/' || $path === '') && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    echo json_encode([
+        'status' => 'ok',
+        'message' => 'Railway Scraper API is running',
+        'version' => '1.0.0'
+    ]);
+    exit;
+}
+
 // Route: POST /api/scrape
-if ($path === '/api/scrape' || $path === '/scrape') {
+if (($path === '/api/scrape' || $path === '/scrape') && $_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Get POST data
     $input = json_decode(file_get_contents('php://input'), true);
@@ -68,16 +71,9 @@ if ($path === '/api/scrape' || $path === '/scrape') {
             'success' => false
         ]);
     }
-    
-} elseif ($path === '/' || $path === '') {
-    // Health check
-    echo json_encode([
-        'service' => 'UiTM Schedule Scraper API',
-        'status' => 'running',
-        'version' => '1.0.0'
-    ]);
-    
-} else {
-    http_response_code(404);
-    echo json_encode(['error' => 'Not found']);
+    exit;
 }
+
+// 404 - Route not found
+http_response_code(404);
+echo json_encode(['error' => 'Not found']);
