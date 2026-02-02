@@ -5,9 +5,11 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\ScraperService;
 
-// Load environment variables
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Load environment variables (if .env exists)
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
 
 // Set headers
 header('Content-Type: application/json');
