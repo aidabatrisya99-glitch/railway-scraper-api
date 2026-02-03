@@ -1,4 +1,4 @@
-providers = ["..."]
+providers = []
 
 [phases.setup]
 nixPkgs = ["php81", "php81Packages.composer", "chromium", "chromedriver", "supervisor"]
