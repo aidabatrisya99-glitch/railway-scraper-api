@@ -1,26 +1,19 @@
-#!/bin/bash
-# Start ChromeDriver in the background
-chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' --whitelisted-ips='' > /tmp/chromedriver.log 2>&1 &
+#!/bin/sh
 
-# Wait for ChromeDriver to be ready
-echo "Waiting for ChromeDriver to start..."
-for i in {1..10}; do
-    if curl -s http://localhost:9515/status > /dev/null 2>&1; then
-        echo "ChromeDriver is ready!"
-        break
-    fi
-    echo "Waiting... ($i/10)"
-    sleep 1
-done
+echo "[STARTUP] Starting ChromeDriver on port 9515..."
+nohup chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' --whitelisted-ips='' > /tmp/chromedriver.log 2>&1 &
+CHROMEDRIVER_PID=$!
+echo "[STARTUP] ChromeDriver PID: $CHROMEDRIVER_PID"
 
-# Check if ChromeDriver is actually running
+sleep 3
+
+echo "[STARTUP] Checking if ChromeDriver is accessible..."
 if curl -s http://localhost:9515/status > /dev/null 2>&1; then
-    echo "ChromeDriver successfully started on port 9515"
+    echo "[STARTUP] ChromeDriver is running!"
 else
-    echo "ERROR: ChromeDriver failed to start!"
-    exit 1
+    echo "[STARTUP] WARNING: ChromeDriver status check failed, but continuing..."
+    cat /tmp/chromedriver.log
 fi
 
-# Start PHP server
-echo "Starting PHP server on port $PORT..."
-php -S 0.0.0.0:$PORT index.php
+echo "[STARTUP] Starting PHP server on port $PORT..."
+exec php -S 0.0.0.0:$PORT index.php
