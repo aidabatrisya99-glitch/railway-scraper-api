@@ -10,4 +10,5 @@ cmds = [
     "chmod +x start.sh"
 ]
 
-# Removed - using Procfile instead
+[start]
+cmd = "./start.sh"
