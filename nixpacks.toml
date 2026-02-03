@@ -10,5 +10,4 @@ cmds = [
     "chmod +x start.sh"
 ]
 
-[start]
-cmd = "bash -c 'chromedriver --port=9515 --allowed-ips=\"\" --allowed-origins=\"*\" --whitelisted-ips=\"\" > /tmp/chromedriver.log 2>&1 & sleep 2 && php -S 0.0.0.0:$PORT index.php'"
+# Removed - using Procfile instead
