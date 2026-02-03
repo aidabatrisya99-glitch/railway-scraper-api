@@ -1,19 +1,16 @@
 #!/bin/sh
+set -e
 
-echo "[STARTUP] Starting ChromeDriver on port 9515..."
-nohup chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' --whitelisted-ips='' > /tmp/chromedriver.log 2>&1 &
+# Start ChromeDriver in background
+chromedriver --port=9515 --allowed-ips='' --allowed-origins='*' --whitelisted-ips='' --verbose &
 CHROMEDRIVER_PID=$!
-echo "[STARTUP] ChromeDriver PID: $CHROMEDRIVER_PID"
+echo "[STARTUP] ChromeDriver started with PID: $CHROMEDRIVER_PID"
 
+# Trap signals to kill ChromeDriver when container stops
+trap "kill $CHROMEDRIVER_PID 2>/dev/null" EXIT INT TERM
+
+# Wait for ChromeDriver to be ready
 sleep 3
 
-echo "[STARTUP] Checking if ChromeDriver is accessible..."
-if curl -s http://localhost:9515/status > /dev/null 2>&1; then
-    echo "[STARTUP] ChromeDriver is running!"
-else
-    echo "[STARTUP] WARNING: ChromeDriver status check failed, but continuing..."
-    cat /tmp/chromedriver.log
-fi
-
-echo "[STARTUP] Starting PHP server on port $PORT..."
-exec php -S 0.0.0.0:$PORT index.php
+# Start PHP server in foreground (keeps container alive)
+exec php -S 0.0.0.0:${PORT:-8080} index.php

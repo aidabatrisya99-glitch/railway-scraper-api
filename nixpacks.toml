@@ -1,7 +1,7 @@
 providers = []
 
 [phases.setup]
-nixPkgs = ["php81", "php81Packages.composer", "chromium", "chromedriver", "supervisor"]
+nixPkgs = ["php81", "php81Packages.composer", "chromium", "chromedriver"]
 
 [phases.install]
 cmds = [
@@ -11,4 +11,4 @@ cmds = [
 ]
 
 [start]
-cmd = "supervisord -c supervisord.conf"
+cmd = "bash start.sh"
