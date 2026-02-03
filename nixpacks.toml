@@ -10,5 +10,8 @@ cmds = [
     "chmod +x start.sh"
 ]
 
+[phases.build]
+cmds = ["echo 'Build complete'"]
+
 [start]
 cmd = "bash start.sh"
